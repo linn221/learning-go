@@ -1,0 +1,36 @@
++ github repositery publish
++ detail on `for key,value := range`
++ nil pointer, the same as NULL pointer in c
++ make function
++ slice's capacity vs length
+	cap(s) vs len(s)
++ https://go.dev/blog/strings
++ optional parameters
+
+
+x module
+x array
+x slices
+x for
+x for range
+x if-else, switch
+
+https://www.joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses/
+
+
+### Retail Pro
+
++ struct & pointers
++ gorm
++ gin router?
+	dependency injection
++ package, imports
++ scope
++ error handling, log package
++ context *gin.Context??
++ pointers
+
+? authentication
+? not standard REST
+? delete account, requiring the account data
+? database not connecting

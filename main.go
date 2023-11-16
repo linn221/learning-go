@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"strings"
+
 	"rsc.io/quote"
 )
 
@@ -40,7 +43,61 @@ func useNewPackage() {
 	fmt.Println(quote.Go())
 }
 
-func main() {
+func sayName(name string) {
+	fmt.Printf("Hello, %v\n", name)
+}
+
+func cycleNames(names []string, f func(string)) {
+	for _, name := range names {
+		f(name)
+	}
+}
+
+func getInitials(n string) (string, string) {
+	n = strings.ToUpper(n)
+	slice := strings.Split(n, " ")
+	return slice[0][:1], slice[1][:1]
+}
+
+type item struct {
+	name  string
+	price float64
+	stock int
+}
+
+func newItem(name string, price float64) item {
+	i := item{
+		name:  name,
+		price: price,
+		stock: 0,
+	}
+
+	return i
+}
+
+func (i *item) addStock(amount int) {
+	i.stock += amount
+}
+
+func (i *item) updateItem(name string, price float64, stock int) {
+	i.name = name
+	i.price = price
+	i.stock = stock
+}
+
+func main2() {
+	apple := newItem("apple", 1000)
+	fmt.Println(apple)
+	apple.addStock(3)
+	fmt.Println(apple)
+	apple.updateItem("mango", 2000, 2)
+	fmt.Println(apple)
+	os.Exit(1)
+	i1, i2 := getInitials("tifa lockhart")
+	fmt.Println(i1, i2)
+	names := []string{"linn", "linnie", "lin"}
+	cycleNames(names, sayName)
+
 	var nums [5]int
 	for i := 1; i < 5; i++ {
 		nums[i] = i
@@ -49,4 +106,5 @@ func main() {
 
 	primes()
 	useNewPackage()
+
 }
