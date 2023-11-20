@@ -11,7 +11,6 @@ func main() {
 	// create router
 	r := gin.Default()
 	// connect to database
-	utils.ConnectDatabase()
 
 	r.POST("/", controllers.CreateNote)
 	r.Run()
