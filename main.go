@@ -9,6 +9,7 @@ import (
 
 func createLoan() {
 	input := models.Loan{
+		// ID:     12,
 		Name:   "Linn Georgie",
 		Amount: 50000,
 	}
@@ -21,19 +22,44 @@ func createLoan() {
 }
 
 func indexLoans() {
+	loans, err := models.ListLoans()
+	if err != nil {
+		log.Fatal(err)
+	}
 
+	dump(loans)
 }
 
 func getLoan() {
-
+	loan, err := models.FindLoanByID(3)
+	if err != nil {
+		log.Fatal(err)
+	}
+	dump(loan)
 }
 
 func updateLoan() {
+	loan := models.Loan{
+		ID:     3,
+		Name:   "zaw zaw",
+		Amount: 4000,
+	}
 
+	_, err := loan.Update()
+	if err != nil {
+		log.Fatal(err)
+	}
+	dump(loan)
 }
 
 func deleteLoan() {
-
+	fmt.Println("deleting loan of id 3")
+	loan, err := models.FindLoanByID(3)
+	if err != nil {
+		log.Fatal(err)
+	}
+	loan.Delete()
+	indexLoans()
 }
 
 func main() {
