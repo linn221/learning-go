@@ -15,8 +15,8 @@ import (
 var DB *gorm.DB
 
 func FreshDB(ctx *gin.Context) {
-	DB.Migrator().DropTable(&Category{}, &Post{})
-	DB.Migrator().CreateTable(&Category{}, &Post{})
+	DB.Migrator().DropTable(&Category{}, &Post{}, &Tag{})
+	DB.Migrator().CreateTable(&Category{}, &Post{}, &Tag{})
 	ctx.String(200, "success!")
 }
 
