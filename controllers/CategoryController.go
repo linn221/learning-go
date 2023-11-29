@@ -12,20 +12,18 @@ import (
 func CreateCategory(ctx *gin.Context) {
 	var input models.Category
 	// binding
-	err := ctx.ShouldBindJSON(&input)
-	if err != nil {
+	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
 	// validating struct
-	err = validator.New().Struct(input)
-	if err != nil {
+	if err := validator.New().Struct(input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": helpers.ProcessValidationErrors(err)})
 		return
 	}
 
-	err = input.CreateCategory()
+	err := input.CreateCategory()
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
@@ -54,20 +52,18 @@ func GetCategory(ctx *gin.Context) {
 func UpdateCategory(ctx *gin.Context) {
 	var input models.Category
 	// binding
-	err := ctx.ShouldBindJSON(&input)
-	if err != nil {
+	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 	// validating struct
-	err = validator.New().Struct(input)
-	if err != nil {
+	if err := validator.New().Struct(input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": helpers.ProcessValidationErrors(err)})
 		return
 	}
 
 	input.ID = helpers.StrToUInt(ctx.Param("id"))
-	err = input.UpdateCategory()
+	err := input.UpdateCategory()
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return

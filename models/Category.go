@@ -9,7 +9,7 @@ import (
 )
 
 type Category struct {
-	ID        uint   `gorm:"primaryKey"`
+	ID        uint   `gorm:"primaryKey" json:"id" validate:"isdefault"`
 	Name      string `gorm:"size:256; unique; not null" json:"name" validate:"required,min=3"`
 	Posts     []Post
 	CreatedAt time.Time

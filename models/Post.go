@@ -7,7 +7,7 @@ import (
 )
 
 type Post struct {
-	ID         uint   `gorm:"primaryKey"`
+	ID         uint   `gorm:"primaryKey" json:"id" validate:"isdefault"`
 	Title      string `gorm:"size:255; not null" json:"title" validate:"required,min=3,max=255"`
 	Content    string `gorm:"text" json:"content" validate:"omitempty,min=5"`
 	CategoryID uint   `json:"category_id" validate:"required,number,gte=0"`
@@ -26,6 +26,11 @@ func (input Post) exists() error {
 }
 
 func (input *Post) CreatePost() error {
+	// checks if the category exists
+	if err := (Category{ID: input.CategoryID}).exists(); err != nil {
+		return err
+	}
+
 	err := DB.Create(&input).Error
 	return err
 }
@@ -34,6 +39,12 @@ func (input *Post) UpdatePost() error {
 	if err := input.exists(); err != nil {
 		return err
 	}
+
+	// checks if the category exists
+	if err := (Category{ID: input.CategoryID}).exists(); err != nil {
+		return err
+	}
+
 	err := DB.Model(&input).Updates(Post{
 		Title:      input.Title,
 		Content:    input.Content,

@@ -30,18 +30,16 @@ func GetPost(ctx *gin.Context) {
 func CreatePost(ctx *gin.Context) {
 	var input models.Post
 	// binding
-	err := ctx.ShouldBindJSON(&input)
-	if err != nil {
+	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 	// validating struct
-	err = validator.New().Struct(input)
-	if err != nil {
+	if err := validator.New().Struct(input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": helpers.ProcessValidationErrors(err)})
 		return
 	}
-	err = input.CreatePost()
+	err := input.CreatePost()
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
@@ -52,20 +50,18 @@ func CreatePost(ctx *gin.Context) {
 func UpdatePost(ctx *gin.Context) {
 	var input models.Post
 	// binding
-	err := ctx.ShouldBindJSON(&input)
-	if err != nil {
+	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 	// validating struct
-	err = validator.New().Struct(input)
-	if err != nil {
+	if err := validator.New().Struct(input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": helpers.ProcessValidationErrors(err)})
 		return
 	}
 
 	input.ID = helpers.StrToUInt(ctx.Param("id"))
-	err = input.UpdatePost()
+	err := input.UpdatePost()
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
