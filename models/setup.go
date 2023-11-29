@@ -14,8 +14,10 @@ import (
 
 var DB *gorm.DB
 
-func FreshDB(context *gin.Context) {
-	context.String(200, "success!")
+func FreshDB(ctx *gin.Context) {
+	DB.Migrator().DropTable(&Category{}, &Post{})
+	DB.Migrator().CreateTable(&Category{}, &Post{})
+	ctx.String(200, "success!")
 }
 
 func ConnectDB() {

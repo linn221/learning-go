@@ -37,14 +37,14 @@ func ProcessValidationErrors(err error) map[string]string {
 
 // var input models.PurchaseOrder
 
-// 	if err := context.ShouldBindJSON(&input); err != nil {
-// 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 	if err := ctx.ShouldBindJSON(&input); err != nil {
+// 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 //         return
 // 	}
 
 // 	if err := validator.New().Struct(input); err != nil {
 // 		errorResponse := helper.ProcessValidationErrors(err)
 
-//         context.JSON(http.StatusBadRequest, gin.H{"error": errorResponse})
+//         ctx.JSON(http.StatusBadRequest, gin.H{"error": errorResponse})
 //         return
 // 	}
