@@ -30,14 +30,32 @@ func (input Category) exists() error {
 
 func (input *Category) CreateCategory() error {
 	// checks for duplicate
+	var count int64
+	if err := DB.Model(&Category{}).Where("name = ?", input.Name).Count(&count).Error; err != nil {
+		return err
+	}
+	if count >= 1 {
+		return errors.New("category name already exists")
+	}
+
 	err := DB.Create(&input).Error
 
 	return err
 }
 
 func (input *Category) UpdateCategory() error {
+	// checks if category exists
 	if err := input.exists(); err != nil {
 		return err
+	}
+
+	// checks for duplicate
+	var count int64
+	if err := DB.Model(&Category{}).Not("id = ?", input.ID).Where("name = ?", input.Name).Count(&count).Error; err != nil {
+		return err
+	}
+	if count >= 1 {
+		return errors.New("category name already exists")
 	}
 
 	err := DB.Model(&input).Updates(Category{
@@ -47,6 +65,7 @@ func (input *Category) UpdateCategory() error {
 }
 
 func (input *Category) DeleteCategory() error {
+	// checks if category exists
 	if err := input.exists(); err != nil {
 		return err
 	}
@@ -65,6 +84,7 @@ func GetCategoryById(id string) (Category, error) {
 	var result Category
 
 	result.ID = helpers.StrToUInt(id)
+	// checks if category exists
 	if err := result.exists(); err != nil {
 		return result, err
 	}
