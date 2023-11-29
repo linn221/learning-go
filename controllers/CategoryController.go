@@ -4,15 +4,24 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"github.com/linn221/go-blog/helpers"
 	"github.com/linn221/go-blog/models"
 )
 
 func CreateCategory(ctx *gin.Context) {
 	var input models.Category
+	// binding
 	err := ctx.ShouldBindJSON(&input)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	// validating struct
+	err = validator.New().Struct(input)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": helpers.ProcessValidationErrors(err)})
 		return
 	}
 
@@ -43,19 +52,27 @@ func GetCategory(ctx *gin.Context) {
 }
 
 func UpdateCategory(ctx *gin.Context) {
-	var category models.Category
-	err := ctx.ShouldBindJSON(&category)
+	var input models.Category
+	// binding
+	err := ctx.ShouldBindJSON(&input)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
-	category.ID = helpers.StrToUInt(ctx.Param("id"))
-	err = category.UpdateCategory()
+	// validating struct
+	err = validator.New().Struct(input)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": helpers.ProcessValidationErrors(err)})
+		return
+	}
+
+	input.ID = helpers.StrToUInt(ctx.Param("id"))
+	err = input.UpdateCategory()
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
-	ctx.JSON(http.StatusOK, category)
+	ctx.JSON(http.StatusOK, input)
 }
 
 func DeleteCategory(ctx *gin.Context) {
