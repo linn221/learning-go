@@ -9,7 +9,7 @@ import (
 type Tag struct {
 	ID    uint   `gorm:"primaryKey" json:"id" validate:"isdefault"`
 	Name  string `gorm:"size=255; unique; not null" json:"name" validate:"required,min=3,max=255"`
-	Posts []Post `gorm:"many2many:post_tag; constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" validate:"isdefault"`
+	Posts []Post `gorm:"many2many:post_tag; constraint:OnDelete:CASCADE;" validate:"isdefault"`
 }
 
 func (input Tag) exists() error {
