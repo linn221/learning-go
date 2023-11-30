@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/linn221/go-blog/helpers"
+	"gorm.io/gorm/clause"
 )
 
 type Post struct {
@@ -12,7 +13,7 @@ type Post struct {
 	Content    string `gorm:"text" json:"content" validate:"omitempty,min=5"`
 	CategoryID uint   `json:"category_id" validate:"required,number,gte=0"`
 	Category   *Category
-	Tags       []Tag `gorm:"many2many:post_tag" validate:"isdefault"`
+	Tags       []Tag `gorm:"many2many:post_tag"`
 }
 
 func (input Post) exists() error {
@@ -73,6 +74,6 @@ func GetPostById(id string) (Post, error) {
 	if err := (Post{ID: helpers.StrToUInt(id)}).exists(); err != nil {
 		return result, err
 	}
-	err := DB.Preload("Category").First(&result, id).Error
+	err := DB.Preload(clause.Associations).First(&result, id).Error
 	return result, err
 }

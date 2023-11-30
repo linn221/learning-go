@@ -34,6 +34,8 @@ func CreatePost(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
+	// ctx.JSON(200, input)
+	// return
 	// validating struct
 	if err := validator.New().Struct(input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": helpers.ProcessValidationErrors(err)})

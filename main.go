@@ -25,6 +25,12 @@ func main() {
 	r.PUT("/post/:id", controllers.UpdatePost)
 	r.DELETE("/post/:id", controllers.DeletePost)
 
+	r.POST("/tag", controllers.CreateTag)
+	r.GET("/tag", controllers.IndexTag)
+	r.GET("/tag/:id", controllers.GetTag)
+	r.PUT("/tag/:id", controllers.UpdateTag)
+	r.DELETE("/tag/:id", controllers.DeleteTag)
+
 	r.GET("/db-reset", models.FreshDB)
 	r.Run(":8001")
 }
