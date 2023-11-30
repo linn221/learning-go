@@ -11,6 +11,7 @@ import (
 type Category struct {
 	ID        uint   `gorm:"primaryKey" json:"id" validate:"isdefault"`
 	Name      string `gorm:"size:256; unique; not null" json:"name" validate:"required,min=3"`
+	PostCount uint   `gorm:"-" json:"post_count" validate:"isdefault"`
 	Posts     []Post
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -26,6 +27,17 @@ func (input Category) exists() error {
 		return errors.New("Category does not exist")
 	}
 	return nil
+}
+
+func (category *Category) countPosts() {
+	// calculate post_count field
+	var count uint
+	if len(category.Posts) == 0 {
+		count = uint(DB.Model(&category).Association("Posts").Count())
+	} else {
+		count = uint(len(category.Posts))
+	}
+	category.PostCount = count
 }
 
 func (input *Category) CreateCategory() error {
@@ -76,8 +88,15 @@ func (input *Category) DeleteCategory() error {
 
 func GetAllCategories() ([]Category, error) {
 	var results []Category
-	err := DB.Find(&results).Error
-	return results, err
+	if err := DB.Find(&results).Error; err != nil {
+		return results, err
+	}
+	// loads post_count
+	for i := range results {
+		results[i].countPosts()
+	}
+
+	return results, nil
 }
 
 func GetCategoryById(id string) (Category, error) {
@@ -89,5 +108,6 @@ func GetCategoryById(id string) (Category, error) {
 	}
 
 	err := DB.Preload(clause.Associations).First(&result, id).Error
+	result.countPosts()
 	return result, err
 }
