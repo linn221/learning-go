@@ -81,11 +81,10 @@ func GetAllCategories() ([]Category, error) {
 }
 
 func GetCategoryById(id string) (Category, error) {
-	var result Category
 
-	result.ID = helpers.StrToUInt(id)
+	var result Category
 	// checks if category exists
-	if err := result.exists(); err != nil {
+	if err := (Category{ID: helpers.StrToUInt(id)}).exists(); err != nil {
 		return result, err
 	}
 

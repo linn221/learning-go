@@ -69,8 +69,7 @@ func GetAllPosts() ([]Post, error) {
 
 func GetPostById(id string) (Post, error) {
 	var result Post
-	result.ID = helpers.StrToUInt(id)
-	if err := result.exists(); err != nil {
+	if err := (Post{ID: helpers.StrToUInt(id)}).exists(); err != nil {
 		return result, err
 	}
 	err := DB.Preload("Category").First(&result, id).Error
