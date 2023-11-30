@@ -13,7 +13,7 @@ type Post struct {
 	Content    string `gorm:"text" json:"content" validate:"omitempty,min=5"`
 	CategoryID uint   `json:"category_id" validate:"required,number,gte=0"`
 	Category   *Category
-	Tags       []Tag `gorm:"many2many:post_tag"`
+	Tags       []Tag `gorm:"many2many:post_tag; constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
 func (input Post) exists() error {
