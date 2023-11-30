@@ -9,7 +9,7 @@ import (
 )
 
 func Dump(i interface{}) {
-	fmt.Printf("%+v\n", i)
+	fmt.Printf("%#v\n\n", i)
 }
 
 // returns zero for invalid input
