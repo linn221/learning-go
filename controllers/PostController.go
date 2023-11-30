@@ -27,6 +27,15 @@ func GetPost(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, post)
 }
 
+func GetPostBySlug(ctx *gin.Context) {
+	post, err := models.GetPostBySlug(ctx.Param("slug"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, post)
+}
+
 func CreatePost(ctx *gin.Context) {
 	var input models.Post
 	// binding

@@ -3,13 +3,16 @@ package models
 import (
 	"errors"
 
+	"github.com/gosimple/slug"
 	"github.com/linn221/go-blog/helpers"
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 type Post struct {
 	ID         uint   `gorm:"primaryKey" json:"id" validate:"isdefault"`
 	Title      string `gorm:"size:255; not null" json:"title" validate:"required,min=3,max=255"`
+	Slug       string `gorm:"size:255; not null; unique" json:"slug" validate:"isdefault"`
 	Content    string `gorm:"text" json:"content" validate:"omitempty,min=5"`
 	CategoryID uint   `json:"category_id" validate:"required,number,gte=0"`
 	Category   *Category
@@ -24,6 +27,12 @@ func (input Post) exists() error {
 	if count <= 0 {
 		return errors.New("Post does not exist")
 	}
+	return nil
+}
+
+func (post *Post) BeforeCreate(tx *gorm.DB) (err error) {
+	// create slug
+	post.Slug = slug.Make(post.Title)
 	return nil
 }
 
@@ -76,4 +85,21 @@ func GetPostById(id string) (Post, error) {
 	}
 	err := DB.Preload(clause.Associations).First(&result, id).Error
 	return result, err
+}
+
+func GetPostBySlug(slug string) (Post, error) {
+	var result Post
+	// validate slug
+	var count int64
+	if err := DB.Model(&Post{}).Where("slug = ?", slug).Count(&count).Error; err != nil {
+		return result, err
+	}
+	if count <= 0 {
+		return result, errors.New("slug does not exist")
+	}
+	err := DB.Where("slug = ?", slug).Preload(clause.Associations).First(&result).Error
+	if err != nil {
+		return result, err
+	}
+	return result, nil
 }
