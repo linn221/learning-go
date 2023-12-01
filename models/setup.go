@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -14,10 +13,9 @@ import (
 
 var DB *gorm.DB
 
-func FreshDB(ctx *gin.Context) {
+func FreshDB() {
 	DB.Migrator().DropTable(&Category{}, &Post{}, &Tag{})
 	DB.Migrator().CreateTable(&Category{}, &Post{}, &Tag{})
-	ctx.String(200, "success!")
 }
 
 func ConnectDB() {

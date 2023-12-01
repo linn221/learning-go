@@ -1,14 +1,15 @@
 package main
 
 import (
+	"os"
+
 	"github.com/gin-gonic/gin"
 	"github.com/linn221/go-blog/controllers"
 	"github.com/linn221/go-blog/models"
+	"github.com/linn221/go-blog/seeders"
 )
 
-func main() {
-	models.ConnectDB()
-
+func startServer() {
 	r := gin.Default()
 	r.GET("/", func(ctx *gin.Context) {
 		ctx.String(200, "hello world")
@@ -32,6 +33,24 @@ func main() {
 	r.PUT("/tag/:id", controllers.UpdateTag)
 	r.DELETE("/tag/:id", controllers.DeleteTag)
 
-	r.GET("/db-reset", models.FreshDB)
 	r.Run(":8001")
+
+}
+
+func main() {
+	models.ConnectDB()
+	if len(os.Args) > 1 {
+		command := os.Args[1]
+		switch command {
+		case "migrate":
+			models.FreshDB()
+		case "seed":
+			seeders.Run()
+		case "migrate:seed":
+			models.FreshDB()
+			seeders.Run()
+		}
+		return
+	}
+	startServer()
 }
