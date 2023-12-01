@@ -17,7 +17,7 @@ func Run() {
 		fmt.Println("Seeding tags success.")
 	}
 
-	if err := SeedPosts(2000); err != nil {
+	if err := SeedPosts(200); err != nil {
 		fmt.Println("Error seeding posts: " + err.Error())
 	} else {
 		fmt.Println("Seeding posts success.")

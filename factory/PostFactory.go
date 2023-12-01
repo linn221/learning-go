@@ -24,8 +24,8 @@ func MakePosts(count int) []models.Post {
 	// each post having 3 tags
 	for i := range posts {
 		posts[i] = models.Post{
-			Title:      randSeq(10),
-			Content:    randSeq(20),
+			Title:      randSeq(15),
+			Content:    randSeq(100),
 			CategoryID: uint(rand.Intn(categoryCount) + 1),
 			Tags: []models.Tag{
 				{

@@ -15,7 +15,9 @@ var DB *gorm.DB
 
 func FreshDB() {
 	DB.Migrator().DropTable(&Category{}, &Post{}, &Tag{})
-	DB.Migrator().CreateTable(&Category{}, &Post{}, &Tag{})
+	DB.Exec("DROP TABLE post_tag;")
+	// join tables won't be created with CreateTable
+	DB.Migrator().AutoMigrate(&Category{}, &Post{}, &Tag{})
 }
 
 func ConnectDB() {
