@@ -10,13 +10,13 @@ import (
 )
 
 type Post struct {
-	ID         uint   `gorm:"primaryKey" json:"id" validate:"isdefault"`
-	Title      string `gorm:"size:255; not null" json:"title" validate:"required,min=3,max=255"`
-	Slug       string `gorm:"size:255; not null; unique" json:"slug" validate:"isdefault"`
-	Content    string `gorm:"text" json:"content" validate:"omitempty,min=5"`
-	CategoryID uint   `json:"category_id" validate:"required,number,gte=0"`
-	Category   *Category
-	Tags       []Tag `gorm:"many2many:post_tag;"`
+	ID         uint      `gorm:"primaryKey" json:"id" validate:"isdefault"`
+	Title      string    `gorm:"size:255; not null" json:"title" validate:"required,min=3,max=255"`
+	Slug       string    `gorm:"size:255; not null; unique" json:"slug" validate:"isdefault"`
+	Content    string    `gorm:"text" json:"content" validate:"omitempty,min=5"`
+	CategoryID uint      `json:"category_id" validate:"required,number,gte=0"`
+	Category   *Category `json:"category,omitempty"`
+	Tags       []Tag     `gorm:"many2many:post_tag;" json:"tags,omitempty"`
 }
 
 func (input Post) exists() error {

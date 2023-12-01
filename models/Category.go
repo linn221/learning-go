@@ -9,12 +9,12 @@ import (
 )
 
 type Category struct {
-	ID        uint   `gorm:"primaryKey" json:"id" validate:"isdefault"`
-	Name      string `gorm:"size:256; unique; not null" json:"name" validate:"required,min=3"`
-	PostCount uint   `gorm:"-" json:"post_count" validate:"isdefault"`
-	Posts     []Post
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        uint      `gorm:"primaryKey" json:"id" validate:"isdefault"`
+	Name      string    `gorm:"size:256; unique; not null" json:"name" validate:"required,min=3"`
+	PostCount uint      `gorm:"-" json:"post_count" validate:"isdefault"`
+	Posts     []Post    `json:"posts,omitempty"`
+	CreatedAt time.Time `json:"created_at" validate:"isdefault"`
+	UpdatedAt time.Time `json:"updated_at" validate:"isdefault"`
 }
 
 func (input Category) exists() error {
