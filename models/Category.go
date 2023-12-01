@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/linn221/go-blog/helpers"
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -38,6 +39,11 @@ func (category *Category) countPosts() {
 		count = uint(len(category.Posts))
 	}
 	category.PostCount = count
+}
+
+func (input *Category) BeforeSave(tx *gorm.DB) error {
+	input.Name = helpers.SanitizeStr(input.Name)
+	return nil
 }
 
 func (input *Category) CreateCategory() error {

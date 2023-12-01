@@ -30,9 +30,15 @@ func (input Post) exists() error {
 	return nil
 }
 
-func (post *Post) BeforeCreate(tx *gorm.DB) (err error) {
+func (post *Post) BeforeCreate(tx *gorm.DB) error {
 	// create slug
 	post.Slug = slug.Make(post.Title)
+	return nil
+}
+
+func (input *Post) BeforeSave(tx *gorm.DB) error {
+	input.Title = helpers.SanitizeStr(input.Title)
+	input.Content = helpers.SanitizeStr(input.Content)
 	return nil
 }
 

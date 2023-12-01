@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/linn221/go-blog/helpers"
+	"gorm.io/gorm"
 )
 
 type Tag struct {
@@ -22,6 +23,11 @@ func (input Tag) exists() error {
 	if count <= 0 {
 		return errors.New("tag does not exist")
 	}
+	return nil
+}
+
+func (input *Tag) BeforeSave(tx *gorm.DB) error {
+	input.Name = helpers.SanitizeStr(input.Name)
 	return nil
 }
 

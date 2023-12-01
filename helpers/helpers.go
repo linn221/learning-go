@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"fmt"
+	"html"
 	"strconv"
 	"strings"
 
@@ -33,6 +34,10 @@ func ProcessValidationErrors(err error) map[string]string {
 	}
 
 	return errorResponse
+}
+
+func SanitizeStr(unsafe string) string {
+	return html.EscapeString(strings.TrimSpace(unsafe))
 }
 
 // var input models.PurchaseOrder
