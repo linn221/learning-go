@@ -14,6 +14,10 @@ func startServer() {
 	r.GET("/", func(ctx *gin.Context) {
 		ctx.String(200, "hello world")
 	})
+
+	r.POST("/user", controllers.CreateUser)
+	r.GET("/user", controllers.GetAllUsers)
+
 	r.POST("/category", controllers.CreateCategory)
 	r.GET("/category", controllers.IndexCategory)
 	r.GET("/category/:id", controllers.GetCategory)

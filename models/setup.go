@@ -14,10 +14,10 @@ import (
 var DB *gorm.DB
 
 func FreshDB() {
-	DB.Migrator().DropTable(&Category{}, &Post{}, &Tag{})
+	DB.Migrator().DropTable(&User{}, &Category{}, &Post{}, &Tag{})
 	DB.Exec("DROP TABLE post_tag;")
 	// join tables won't be created with CreateTable
-	DB.Migrator().AutoMigrate(&Category{}, &Post{}, &Tag{})
+	DB.Migrator().AutoMigrate(&User{}, &Category{}, &Post{}, &Tag{})
 }
 
 func ConnectDB() {
@@ -41,6 +41,6 @@ func ConnectDB() {
 		log.Fatal(err)
 	}
 
-	DB.Migrator().AutoMigrate(&Category{}, &Post{})
+	DB.Migrator().AutoMigrate(&User{}, &Category{}, &Post{}, &Tag{})
 	fmt.Println("db connected")
 }

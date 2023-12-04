@@ -10,7 +10,7 @@ import (
 type Tag struct {
 	ID        uint   `gorm:"primaryKey" json:"id" validate:"isdefault"`
 	Name      string `gorm:"size=255; unique; not null" json:"name" validate:"required,min=3,max=255"`
-	PostCount uint   `gorm:"-" json:"post_count" validate:"isdefault"`
+	PostCount *uint  `gorm:"-" json:"post_count,omitempty" validate:"isdefault"`
 	Posts     []Post `gorm:"many2many:post_tag; constraint:OnDelete:CASCADE;" json:"posts,omitempty" validate:"isdefault"`
 }
 
@@ -39,7 +39,7 @@ func (tag *Tag) countPosts() {
 	} else {
 		count = uint(len(tag.Posts))
 	}
-	tag.PostCount = count
+	tag.PostCount = &count
 }
 
 func (input *Tag) CreateTag() error {
