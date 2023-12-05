@@ -2,28 +2,36 @@ package token
 
 import (
 	"errors"
-	"fmt"
+	"os"
+	"strconv"
+	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
-const APP_KEY string = "coffee"
-
 func GenerateAuthToken(userId uint, userName string) (string, error) {
-	claims := jwt.MapClaims{}
-	claims["userid"] = userId
-	claims["username"] = userName
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenStr, err := token.SignedString([]byte(APP_KEY))
+	lifespan, err := strconv.Atoi(os.Getenv("TOKEN_LIFESPAN"))
 	if err != nil {
 		return "", err
 	}
-	return fmt.Sprintf("bearer %v", tokenStr), nil
+	claims := jwt.MapClaims{}
+	claims["userid"] = userId
+	claims["username"] = userName
+	claims["exp"] = time.Now().Add(time.Hour * time.Duration(lifespan)).Unix()
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenStr, err := token.SignedString([]byte(os.Getenv("SECRET_KEY")))
+	if err != nil {
+		return "", err
+	}
+	return tokenStr, nil
 }
 
 func ValidateToken(tokenString string) (uint, error) {
+	if tokenString == "" {
+		return 0, errors.New("token string is empty")
+	}
 	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
-		return []byte(APP_KEY), nil
+		return []byte(os.Getenv("SECRET_KEY")), nil
 	})
 	if err != nil {
 		return 0, err
