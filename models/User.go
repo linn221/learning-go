@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/linn221/go-blog/helpers"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/linn221/go-blog/utils/token"
 	"gorm.io/gorm"
 )
 
@@ -16,12 +16,8 @@ type User struct {
 	UpdatedAt time.Time
 }
 
-func hash(password string) ([]byte, error) {
-	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-}
-
 func (input *User) BeforeSave(tx *gorm.DB) error {
-	hashedPassword, err := hash(input.Password)
+	hashedPassword, err := helpers.HashStr(input.Password)
 	if err != nil {
 		return err
 	}
@@ -36,9 +32,22 @@ func (input *User) CreateUser() error {
 	return err
 }
 
-func (input *User) Login() error {
+func (input *User) Login() (string, error) {
+	var u User
+	if err := DB.Model(&User{}).Where("name = ?", input.Name).Take(&u).Error; err != nil {
+		return "", err
+	}
 
-	return nil
+	if err := helpers.VerifyPassword(input.Password, u.Password); err != nil {
+		return "", err
+	}
+
+	tokenStr, err := token.GenerateAuthToken(u.ID, u.Name, 60*60*24)
+	if err != nil {
+		return "", err
+	}
+
+	return tokenStr, nil
 }
 
 func GetAllUsers() ([]User, error) {

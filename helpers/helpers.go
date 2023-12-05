@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Dump(i interface{}) {
@@ -38,6 +39,16 @@ func ProcessValidationErrors(err error) map[string]string {
 
 func SanitizeStr(unsafe string) string {
 	return html.EscapeString(strings.TrimSpace(unsafe))
+}
+
+func VerifyPassword(password, hashedPassword string) error {
+
+	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+}
+
+func HashStr(password string) ([]byte, error) {
+
+	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 }
 
 // var input models.PurchaseOrder
