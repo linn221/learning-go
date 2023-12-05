@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"time"
 
 	"github.com/linn221/go-blog/helpers"
@@ -42,7 +43,7 @@ func (input *User) Login() (string, error) {
 		return "", err
 	}
 
-	tokenStr, err := token.GenerateAuthToken(u.ID, u.Name, 60*60*24)
+	tokenStr, err := token.GenerateAuthToken(u.ID, u.Name)
 	if err != nil {
 		return "", err
 	}
@@ -54,4 +55,21 @@ func GetAllUsers() ([]User, error) {
 	var result []User
 	err := DB.Select("id", "name", "created_at", "updated_at").Find(&result).Error
 	return result, err
+}
+
+func GetUserById(id uint) (User, error) {
+	var count int64
+	if err := DB.Model(&User{}).Where("id = ?", id).Count(&count).Error; err != nil {
+		return User{}, err
+	}
+	if count <= 0 {
+		return User{}, errors.New("User does not exist")
+	}
+
+	var user User
+	err := DB.Omit("password").Find(&user, id).Error
+	if err != nil {
+		return User{}, err
+	}
+	return user, nil
 }
